@@ -189,16 +189,60 @@ namespace ExemploCRUD
                         Titulo = dr.GetString(1)
                     });
                 }
+
+                comandos.Parameters.Clear();
             } catch(SqlException se) 
             {
-                throw new Exception("Erro ao listar categorias. " + se);
+                throw new Exception("Erro ao listar categorias. " + se.Message);
             } 
             catch(Exception ex) 
             {
-                throw new Exception("Erro Inesperado. " + ex);
+                throw new Exception("Erro Inesperado. " + ex.Message);
             }
+            finally {
+                cn.Close();
+            }
+            
+            return lista;
+        }
 
-            cn.Close();
+        public List<Categoria> listarCategorias(string titulo) 
+        {
+            List<Categoria> lista = new List<Categoria>();
+            try {
+                cn = new SqlConnection();
+                cn.ConnectionString = @"Data Source=.\sqlexpress; Initial Catalog = Papelaria; User Id = sa; Password = senai@132";
+                cn.Open();
+                comandos = new SqlCommand();
+                comandos.CommandType = CommandType.Text;
+                comandos.CommandText = "SELECT FROM Categorias WHERE titulo like @titulo";
+                comandos.Parameters.AddWithValue("@titulo", titulo);
+                //exzecutando leitura
+                dr = comandos.ExecuteReader();
+                //enquanto estiver lendo ele adiciona o objeto na lista
+                while(dr.Read()) 
+                {
+                    //adicionando na lista                    
+                    lista.Add(new Categoria{
+                        //pegando o id
+                        Id = dr.GetInt32(0),
+                        //pegando o titulo
+                        Titulo = dr.GetString(1)
+                    });
+                }
+
+                comandos.Parameters.Clear();
+            } catch(SqlException se) 
+            {
+                throw new Exception("Erro ao listar categorias. " + se.Message);
+            } 
+            catch(Exception ex) 
+            {
+                throw new Exception("Erro Inesperado. " + ex.Message);
+            }
+            finally {
+                cn.Close();
+            }
             return lista;
         }
     }
