@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ExemploCRUD
 {
@@ -12,10 +13,15 @@ namespace ExemploCRUD
             //    BancoDados banco = new BancoDados();
             //    banco.Adicionar(cat);
 
-            System.Console.WriteLine("digite o id da categoria");
-            int id = Convert.ToInt32(Console.ReadLine());
+            //System.Console.WriteLine("digite o Id da categoria");
+            //int id = Convert.ToInt32(Console.ReadLine());
             BancoDados banco = new BancoDados();
-            banco.listarCategorias(id);
+            List<Categoria> lista = new List<Categoria>();
+            lista = banco.listarCategorias();
+            foreach(Categoria a in lista) 
+            {
+                System.Console.WriteLine("ID: {0} \nCATEGORIA: {1} ",a.Id, a.Titulo);
+            }
         }
     }
 }

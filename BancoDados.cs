@@ -16,6 +16,7 @@ namespace ExemploCRUD
         SqlDataReader dr;
 
         //metodo para adicionar dados no banco
+        /*inicio crud categorias*/
         public bool Adicionar(Categoria cat) 
         {
             //variavel de retorno
@@ -85,10 +86,10 @@ namespace ExemploCRUD
                 comandos.CommandType = CommandType.Text;
                 //qual comando será executado
                 comandos.CommandText = "UPDATE Categorias set titulo = @titulo WHERE idCategoria = @Id";
-                //atualizando titulo no banco
-                comandos.Parameters.AddWithValue("@titulo", cat.Titulo);
                 //atualizando Id no banco
                 comandos.Parameters.AddWithValue("@id", cat.Id);
+                //atualizando titulo no banco
+                comandos.Parameters.AddWithValue("@titulo", cat.Titulo);
                 //VERIFICAR quantas linhas foram alteradas
                 int r = comandos.ExecuteNonQuery();
                 //se as linhas altaradas forem maiores que 0
@@ -170,11 +171,12 @@ namespace ExemploCRUD
             List<Categoria> lista = new List<Categoria>();
             try {
                 cn = new SqlConnection();
-                cn.ConnectionString = @"Data Source=.\sqlexpress; Initial Catalog = Papelaria; User Id = sa; Password = senai@132";
+                cn.ConnectionString = @"Data Source=.\sqlexpress; Initial Catalog = Papelaria; User Id = sa; Password = senai@123";
                 cn.Open();
                 comandos = new SqlCommand();
+                comandos.Connection = cn;
                 comandos.CommandType = CommandType.Text;
-                comandos.CommandText = "SELECT FROM Categorias WHERE IdCategoria = @id";
+                comandos.CommandText = "SELECT * FROM Categorias WHERE IdCategoria = @id";
                 comandos.Parameters.AddWithValue("@id", id);
                 //exzecutando leitura
                 dr = comandos.ExecuteReader();
@@ -211,11 +213,12 @@ namespace ExemploCRUD
             List<Categoria> lista = new List<Categoria>();
             try {
                 cn = new SqlConnection();
-                cn.ConnectionString = @"Data Source=.\sqlexpress; Initial Catalog = Papelaria; User Id = sa; Password = senai@132";
+                cn.ConnectionString = @"Data Source=.\sqlexpress; Initial Catalog = Papelaria; User Id = sa; Password = senai@123";
                 cn.Open();
                 comandos = new SqlCommand();
+                comandos.Connection = cn;
                 comandos.CommandType = CommandType.Text;
-                comandos.CommandText = "SELECT FROM Categorias WHERE titulo like @titulo";
+                comandos.CommandText = "SELECT * FROM Categorias WHERE titulo like @titulo";
                 comandos.Parameters.AddWithValue("@titulo", titulo);
                 //exzecutando leitura
                 dr = comandos.ExecuteReader();
@@ -245,5 +248,49 @@ namespace ExemploCRUD
             }
             return lista;
         }
+
+        public List<Categoria> listarCategorias() 
+        {
+            List<Categoria> lista = new List<Categoria>();
+            try {
+                cn = new SqlConnection();
+                cn.ConnectionString = @"Data Source=.\sqlexpress; Initial Catalog = Papelaria; User Id = sa; Password = senai@123";
+                cn.Open();
+                comandos = new SqlCommand();
+                comandos.Connection = cn;
+                comandos.CommandType = CommandType.Text;
+                comandos.CommandText = "SELECT * FROM Categorias";
+                //exzecutando leitura
+                dr = comandos.ExecuteReader();
+                //enquanto estiver lendo ele adiciona o objeto na lista
+                while(dr.Read()) 
+                {
+                    //adicionando na lista                    
+                    lista.Add(new Categoria{
+                        //pegando o id
+                        Id = dr.GetInt32(0),
+                        //pegando o titulo
+                        Titulo = dr.GetString(1)
+                    });
+                }
+
+                comandos.Parameters.Clear();
+            } catch(SqlException se) 
+            {
+                throw new Exception("Erro ao listar categorias. " + se.Message);
+            } 
+            catch(Exception ex) 
+            {
+                throw new Exception("Erro Inesperado. " + ex.Message);
+            }
+            finally {
+                cn.Close();
+            }
+            return lista;
+        }
+        /*fim crud categorias*/
+
+
+        /*inicia crud  */
     }
 }
