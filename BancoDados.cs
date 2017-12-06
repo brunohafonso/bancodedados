@@ -291,6 +291,82 @@ namespace ExemploCRUD
         /*fim crud categorias*/
 
 
-        /*inicia crud  */
+        /*inicia crud produtos */
+        public bool Adicionar(Produto prod)
+        {
+            bool rs = false;
+            try 
+            {
+                cn = new SqlConnection();
+                cn.ConnectionString = @"Data Source=.\sqlexpress; Initial Catalog = Papelaria; User Id = sa; Password = senai@123";
+                cn.Open();
+                comandos = new SqlCommand();
+                comandos.Connection = cn;
+                comandos.CommandType = CommandType.Text;
+                comandos.CommandText = "INSERT INTO Produtos(nomeProduto, descricao, idCategoria, preco)VALUES(@nomeProduto, @descricao, @idCategoria, @preco)";
+                comandos.Parameters.AddWithValue("@nomeProduto", prod.NomeProduto);
+                comandos.Parameters.AddWithValue("@descricao", prod.Descricao);
+                comandos.Parameters.AddWithValue("@idCategoria", prod.IdCategoria);
+                comandos.Parameters.AddWithValue("@preco", prod.Preco);
+                int r = comandos.ExecuteNonQuery();
+                if(r > 0)
+                    rs = true;
+
+                comandos.Parameters.Clear();
+            }
+            catch(SqlException se)
+            {
+                throw new Exception("Erro a cadastrar Registro. " + se.Message);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Erro Inesperado. " + ex.Message);
+            }
+            finally
+            {
+                cn.Close();
+            }
+            return rs;
+        }
+
+        public bool Atualizar(Produto prod)
+        {
+            bool rs = false;
+            try 
+            {
+                cn = new SqlConnection();
+                cn.ConnectionString = @"Data Source=.\sqlexpress; Initial Catalog = Papelaria; User Id = sa; Password = senai@123";
+                cn.Open();
+                comandos = new SqlCommand();
+                comandos.Connection = cn;
+                comandos.CommandType = CommandType.Text;
+                comandos.CommandText = "UPDATE Produtos set nomeProduto = @nomeProduto,  descricao = @descricao, idCategoria = @idCategoria, preco = @preco WHERE idProduto = @id";
+                comandos.Parameters.AddWithValue("@id", prod.Id);
+                comandos.Parameters.AddWithValue("@nomeProduto", prod.NomeProduto);
+                comandos.Parameters.AddWithValue("@descricao", prod.Descricao);
+                comandos.Parameters.AddWithValue("@idCategoria", prod.IdCategoria);
+                comandos.Parameters.AddWithValue("@preco", prod.Preco);
+                int r = comandos.ExecuteNonQuery();
+                if(r > 0)
+                    rs = true;
+
+                comandos.Parameters.Clear();
+            }
+            catch(SqlException se)
+            {
+                throw new Exception("Erro a cadastrar Registro. " + se.Message);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Erro Inesperado. " + ex.Message);
+            }
+            finally
+            {
+                cn.Close();
+            }
+            return rs;
+        }
+
+        /*fim crud produtos */
     }
 }

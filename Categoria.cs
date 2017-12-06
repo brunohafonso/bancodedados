@@ -10,8 +10,9 @@ namespace ExemploCRUD
             
         }
 
-        public Categoria(string Titulo)
+        public Categoria(int Id, string Titulo)
         {
+            this.Id = Id;
             this.Titulo = Titulo;
         }
     }
